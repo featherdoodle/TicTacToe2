@@ -44,7 +44,7 @@ public class History {
             for(Board i : boards){
                 out.println(i.ToString(i));
             }
-            winner = game.board.winnerState;
+            winner = game.board.checkWin();
             if(winner == WinnerState.PLAYER_1_WINS){ 
                 out.println("Player Wins");
                 System.out.println("Player Wins");
@@ -60,7 +60,7 @@ public class History {
     
     public static List<History> load(String fileName){
         
-        List<History> histories = null;
+        List<History> histories = new ArrayList<>(); //if histories is empty, stuff will be messed up
         
         try{
             FileReader fileReader = new FileReader(fileName);
@@ -68,7 +68,7 @@ public class History {
             
             while(true){
                 History history = historyReader(bufferedReader);
-                if(history != null){
+                if(history != null){ //the boards aren't organized by game properly. i should probably make a history of games that store baords....
                     histories.add(history);
                 }else{
                     break;
@@ -76,9 +76,7 @@ public class History {
             }
             bufferedReader.close();
         }catch(FileNotFoundException e){
-            
         }catch(IOException e){
-            
         }
         return histories;
     }
@@ -86,12 +84,17 @@ public class History {
     private static History historyReader(BufferedReader bufferedReader) throws IOException{
         History history = new History();
         String line;
+        int lineNumber = 0;
         
         while(true){
             
             line = bufferedReader.readLine();
             if(line == null){
-                return null;//returns null for the check above
+                if(lineNumber == 0){
+                    return null;
+                }else{
+                    break;
+                }
             }else if(line.equals("Player Win")){
                 history.winner = WinnerState.PLAYER_1_WINS;
                 break;
@@ -101,11 +104,21 @@ public class History {
             }else if(line.equals("Tie")){
                 history.winner = WinnerState.TIE;
                 break;
-            }else{//check for new game...
+            }else if(Board.isBoard(line)){//i need a board here, and i feel like board isn't the correct class to store it.
                 Board board = new Board();
                 history.boards.add(board.stringToBoard(line));
-
+                
+                //boolean winnerStateFound = false;
+                
+                /*while(!winnerStateFound){ //this board is messed
+                    if(Board.isBoard(bufferedReader.readLine())); //will this screw up the order of the lines..........
+                    
+                }*/
+                
+                //read the next text line to find out the winner state, so each board is indeoendent
+                
             }
+            lineNumber++;
         }
         return history;
     }

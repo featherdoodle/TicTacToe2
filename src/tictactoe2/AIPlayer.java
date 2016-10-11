@@ -17,7 +17,7 @@ public class AIPlayer extends Player {
     
     public List<History> histories;//skeptical
     
-    AIPlayer(List<History> _histories){
+    AIPlayer(List<History> _histories){ //this is the wrong history...
         histories = _histories; //am i using this history in getMove()
     }
     
@@ -25,7 +25,7 @@ public class AIPlayer extends Player {
     public Move getMove(Board board){ //check board
         
         if(histories != null){ //check the histories
-            return chooseMove(possibleMoves(board, histories));//agaiiiinn
+            return chooseMove(board, histories);//agaiiiinn
         }else{
             return randomMove(board); //if there aren't moves to choose from, choose randomly
         }
@@ -33,9 +33,9 @@ public class AIPlayer extends Player {
     }
     
     public Move randomMove(Board board){
-        Random random = new Random();//like arrays with the 3?
+        Random random = new Random();
         
-        int xCoordinate = random.nextInt(3);//-1155099828
+        int xCoordinate = random.nextInt(3);
         int yCoordinate = random.nextInt(3);
         
         Move move = new Move(xCoordinate, yCoordinate);
@@ -58,9 +58,19 @@ public class AIPlayer extends Player {
         return possibleMoves;
     }
     
-    public Move chooseMove(List<Move> possibleMoves){
-        Random random = new Random(possibleMoves.size());
-        return possibleMoves.get(random.nextInt());
+    public Move chooseMove(Board board, List<History> histories){//changed from inporting possible moves to board, history
+        //make it so it chooses random every once and a while, and so it is win rates instead of what it is
+        //account for cat games (0.5)
+        Random random = new Random();
+        List<Move> moves = possibleMoves(board, histories);
+        if(moves.size() == 0){
+            return randomMove(board);
+        }else{
+            int index = random.nextInt(moves.size()); //size is not positive
+            Move result = moves.get(index);
+            return result;
+        }
+        
     }
     
 }

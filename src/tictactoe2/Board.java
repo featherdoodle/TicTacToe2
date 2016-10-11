@@ -24,7 +24,6 @@ public class Board {
                 boardStates[i][j] = board.boardStates[i][j];
             }
         }
-        winnerState = board.winnerState;
     }
     
     public static enum BoardState{
@@ -34,10 +33,10 @@ public class Board {
     public BoardState[][] boardStates = {{BoardState.EMPTY, BoardState.EMPTY, 
         BoardState.EMPTY}, {BoardState.EMPTY, BoardState.EMPTY, BoardState.EMPTY}, 
         {BoardState.EMPTY, BoardState.EMPTY, BoardState.EMPTY}};
-    
-    public WinnerState winnerState = WinnerState.UNFINISHED;
-    
+        
     public WinnerState checkWin(){
+        WinnerState winnerState = WinnerState.UNFINISHED;
+
         //horizontal check
         for(int i = 0; i < 3; i++){                
             if((boardStates[i][0] == boardStates[i][1])&&(boardStates[i][0] == boardStates[i][2])){
@@ -165,6 +164,24 @@ public class Board {
         while (n-- > 0 && pos != -1)
             pos = str.indexOf(s, pos+1);
         return pos;
+    }
+    
+    public static boolean isBoard(String text){ //this is like the worst method... but
+        //boolean board;
+        if(text == null){
+            return false;
+        }else if(text.equals("Player Win")){
+            return false;
+        }else if(text.equals("Computer Win")){
+            return false;
+        }else if(text.equals("Tie")){
+            return false;
+        }else if(text.equals("New Game")){
+            return false;
+        }else{
+            return true;
+        }
+        
     }
     
     
